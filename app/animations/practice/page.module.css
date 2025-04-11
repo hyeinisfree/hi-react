@@ -1,0 +1,10 @@
+.section {
+  min-height: 80vh;
+}
+
+.box {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  cursor: pointer;
+}
