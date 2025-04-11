@@ -1,3 +1,13 @@
+.progress_bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 100vw;
+  background-color: pink;
+  z-index: 1;
+}
+
 .section {
   min-height: 80vh;
 }

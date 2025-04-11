@@ -1,9 +1,15 @@
-"use client";
+'use client';
 
-import { useRef } from "react";
-import styles from "./page.module.css";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import { useRef, useState } from 'react';
+import styles from './page.module.css';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from 'motion/react';
 
 gsap.registerPlugin(useGSAP);
 
@@ -14,31 +20,44 @@ export default function PracticePage() {
 
   useGSAP(
     () => {
-      gsap.to(".box", {
+      gsap.to('.box', {
         duration: 1,
         rotation: 360,
         opacity: 1,
         delay: 0.5,
         stagger: 0.2,
-        ease: "sine.out",
+        ease: 'sine.out',
         force3D: true,
       });
     },
     { scope: container }
   );
 
+  const { scrollYProgress } = useScroll();
+  const { scrollY } = useScroll();
+  const [scrollDirection, setScrollDirection] = useState('down');
+
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    const diff = current - scrollY.getPrevious();
+    setScrollDirection(diff > 0 ? 'down' : 'up');
+  });
+
   const handleClick = contextSafe(() => {
-    gsap.to(".box", {
+    gsap.to('.box', {
       duration: 0.5,
       opacity: 0,
       y: -100,
       stagger: 0.1,
-      ease: "back.in",
+      ease: 'back.in',
     });
   });
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6">
+      <motion.div
+        className={`${styles.progress_bar} progress_bar`}
+        style={{ scaleX: scrollYProgress, originX: 0 }}
+      ></motion.div>
       <main ref={container} className="container flex flex-col justify-center">
         <section
           className={`${styles.section} flex flex-col justify-center items-center gap-6`}
@@ -54,9 +73,27 @@ export default function PracticePage() {
           </div>
         </section>
         <section
+          className={`${styles.section} flex flex-col justify-center items-center gap-6`}
+        >
+          <div className="box-container flex justify-center items-center gap-2">
+            <motion.div
+              drag
+              className={`${styles.box} box bg-fuchsia-400`}
+              whileHover={{ scale: 1.1 }}
+            ></motion.div>
+            <div className={`${styles.box} box bg-fuchsia-400`}></div>
+            <div className={`${styles.box} box bg-fuchsia-400`}></div>
+          </div>
+        </section>
+        <section
           className={`${styles.section} flex justify-center items-center`}
         >
-          <div className="grid-container grid grid-cols-2 gap-6">
+          <motion.div
+            className="grid-container grid grid-cols-2 gap-6"
+            initial={{ y: 10, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ amount: 0.2 }}
+          >
             <div className="introduction min-w-56">
               <h2 className="text-2xl">Hi! I'm</h2>
               <h1 className="text-4xl">Hyein Kim</h1>
@@ -83,8 +120,11 @@ export default function PracticePage() {
                 처벌·보안처분 또는 강제노역을 받지 아니한다.
               </p>
             </div>
-          </div>
+          </motion.div>
         </section>
+        <section
+          className={`${styles.section} flex justify-center items-center`}
+        ></section>
       </main>
     </div>
   );
