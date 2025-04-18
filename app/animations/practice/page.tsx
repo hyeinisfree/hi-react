@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useRef, useState } from 'react';
-import styles from './page.module.css';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { useRef, useState } from "react";
+import styles from "./page.module.css";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import {
   motion,
   useMotionValueEvent,
   useScroll,
   useSpring,
-} from 'motion/react';
+} from "motion/react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -20,13 +20,13 @@ export default function PracticePage() {
 
   useGSAP(
     () => {
-      gsap.to('.box', {
+      gsap.to(".box", {
         duration: 1,
         rotation: 360,
         opacity: 1,
         delay: 0.5,
         stagger: 0.2,
-        ease: 'sine.out',
+        ease: "sine.out",
         force3D: true,
       });
     },
@@ -34,21 +34,14 @@ export default function PracticePage() {
   );
 
   const { scrollYProgress } = useScroll();
-  const { scrollY } = useScroll();
-  const [scrollDirection, setScrollDirection] = useState('down');
-
-  useMotionValueEvent(scrollY, 'change', (current) => {
-    const diff = current - scrollY.getPrevious();
-    setScrollDirection(diff > 0 ? 'down' : 'up');
-  });
 
   const handleClick = contextSafe(() => {
-    gsap.to('.box', {
+    gsap.to(".box", {
       duration: 0.5,
       opacity: 0,
       y: -100,
       stagger: 0.1,
-      ease: 'back.in',
+      ease: "back.in",
     });
   });
 
